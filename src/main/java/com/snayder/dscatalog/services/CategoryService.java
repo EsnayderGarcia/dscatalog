@@ -3,6 +3,8 @@ package com.snayder.dscatalog.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.snayder.dscatalog.dtos.CategoryDTO;
 import com.snayder.dscatalog.entities.Category;
 import com.snayder.dscatalog.repositories.CategoryRepository;
-import com.snayder.dscatalog.services.exceptions.EntityNotFoundException;
+import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 
 /*Essa anotação vai registrar esta classe como um componente*/ 
 /*que vai participar do sistema de injeção de dependência do spring*/
@@ -34,7 +36,7 @@ public class CategoryService {
 	public CategoryDTO findById(Long id) {
 		Category category = this.categoryRepository
 								.findById(id)
-								.orElseThrow(() -> new EntityNotFoundException("Categoria não Encontrada!"));
+								.orElseThrow(() -> new ResourceNotFoundException("Categoria não Encontrada!"));
 		
 		return new CategoryDTO(category);
 	}
@@ -61,14 +63,9 @@ public class CategoryService {
 			
 			return new CategoryDTO(category);
 		} 
-		catch (Exception e) {
-			throw new EntityNotFoundException("Id "+idCategory+ " não encontrado!");
+		catch (EntityNotFoundException ex) {
+			throw new ResourceNotFoundException("Id "+idCategory+ " não encontrado!");
 		}
 	}
-	
-	
-	
-	
-	
 	
 }
