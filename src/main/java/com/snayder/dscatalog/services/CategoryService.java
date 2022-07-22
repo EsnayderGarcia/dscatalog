@@ -67,7 +67,7 @@ public class CategoryService {
 			return new CategoryDTO(category);
 		} 
 		catch (EntityNotFoundException ex) {
-			throw new ResourceNotFoundException("Id "+idCategory+ " não encontrado!");
+			throw new ResourceNotFoundException("Categoria não encontrada para atualização");
 		}
 	}
 
@@ -77,7 +77,7 @@ public class CategoryService {
 			this.categoryRepository.deleteById(idCategory);
 		} 
 		catch (EmptyResultDataAccessException ex) {
-			throw new ResourceNotFoundException("Id "+idCategory+ " não encontrado!");
+			throw new ResourceNotFoundException("Categoria não encontrada para exclusão");
 		}
 		catch(DataIntegrityViolationException ex) {
 			throw new DataBaseException("Está operação viola a integridade do Banco de Dados");

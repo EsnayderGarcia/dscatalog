@@ -48,7 +48,6 @@ public class CategoryResource {
 		return ResponseEntity.ok(category);
 	}
 	
-	
 	@PostMapping
 	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
 		
