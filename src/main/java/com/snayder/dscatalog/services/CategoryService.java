@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.snayder.dscatalog.dtos.CategoryDTO;
 import com.snayder.dscatalog.entities.Category;
 import com.snayder.dscatalog.repositories.CategoryRepository;
+import com.snayder.dscatalog.services.exceptions.DataBaseException;
 import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 
 /*Essa anotação vai registrar esta classe como um componente*/ 
@@ -67,5 +70,20 @@ public class CategoryService {
 			throw new ResourceNotFoundException("Id "+idCategory+ " não encontrado!");
 		}
 	}
-	
+
+	public void delete(Long idCategory) {
+		
+		try {
+			this.categoryRepository.deleteById(idCategory);
+		} 
+		catch (EmptyResultDataAccessException ex) {
+			throw new ResourceNotFoundException("Id "+idCategory+ " não encontrado!");
+		}
+		catch(DataIntegrityViolationException ex) {
+			throw new DataBaseException("Está operação viola a integridade do Banco de Dados");
+		}
+	}
+
 }
+
+
