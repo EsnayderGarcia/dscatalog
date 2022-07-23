@@ -10,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.snayder.dscatalog.dtos.CategoryDTO;
 import com.snayder.dscatalog.dtos.ProductDTO;
+import com.snayder.dscatalog.entities.Category;
 import com.snayder.dscatalog.entities.Product;
 import com.snayder.dscatalog.repositories.ProductRepository;
 import com.snayder.dscatalog.services.exceptions.DataBaseException;
@@ -30,7 +32,7 @@ public class ProductService {
 		Page<Product> categories = this.productRepository.findAll(pageRequest);
 		
 		/*O page já é um stream*/
-		Page<ProductDTO> dtos = categories.map(c -> new ProductDTO(c));
+		Page<ProductDTO> dtos = categories.map(c -> new ProductDTO(c, c.getCategories()));
 										   
 		return dtos;
 	}
@@ -49,10 +51,10 @@ public class ProductService {
 		
 		Product product = new Product();
 		
-		product.setName(dto.getName());
+		this.convertToProduct(dto, product);
 		product = this.productRepository.save(product);
 		
-		return new ProductDTO(product);
+		return new ProductDTO(product, product.getCategories());
 	}
 	
 	@Transactional
@@ -61,10 +63,11 @@ public class ProductService {
 		try {
 			Product product = this.productRepository.getOne(idProduct);
 			
-			product.setName(dto.getName());
+			product.getCategories().clear();
+			this.convertToProduct(dto, product);
 			product = this.productRepository.save(product);
 			
-			return new ProductDTO(product);
+			return new ProductDTO(product, product.getCategories());
 		} 
 		catch (EntityNotFoundException ex) {
 			throw new ResourceNotFoundException("Produto não encontrado para atualização");
@@ -81,6 +84,18 @@ public class ProductService {
 		}
 		catch(DataIntegrityViolationException ex) {
 			throw new DataBaseException("Está operação viola a integridade do Banco de Dados");
+		}
+	}
+	
+	private void convertToProduct(ProductDTO dto, Product product) {
+		product.setName(dto.getName());
+		product.setDescription(dto.getDescription());
+		product.setPrice(dto.getPrice());
+		product.setImgUrl(dto.getImgUrl());
+		product.setDate(dto.getdate());
+		
+		for (CategoryDTO catDTO : dto.getCategories()) {
+			product.getCategories().add(new Category(catDTO));
 		}
 	}
 
