@@ -19,13 +19,13 @@ Ainda serão implementados os testes unitários e de integração utilizando a o
 
 ## Features
 
-### Categoria
+### Category
 - Inserção;
 - Atualização;
 - Deleção;
 - Consulta paginada e por id.
 
-### Produto
+### Product
 - Inserção;
 - Atualização;
 - Deleção;
