@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,9 @@ public class CategoryService {
 	private CategoryRepository categoryRepository;
 	
 	@Transactional(readOnly = true)
-	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
 			
-		Page<Category> categories = this.categoryRepository.findAll(pageRequest);
+		Page<Category> categories = this.categoryRepository.findAll(pageable);
 		
 		/*O page já é um stream*/
 		Page<CategoryDTO> dtos = categories.map(c -> new CategoryDTO(c));

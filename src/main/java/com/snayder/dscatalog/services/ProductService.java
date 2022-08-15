@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +28,9 @@ public class ProductService {
 	private ProductRepository productRepository;
 	
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
+	public Page<ProductDTO> findAllPaged(Pageable pageable) {
 			
-		Page<Product> categories = this.productRepository.findAll(pageRequest);
+		Page<Product> categories = this.productRepository.findAll(pageable);
 		
 		/*O page já é um stream*/
 		Page<ProductDTO> dtos = categories.map(c -> new ProductDTO(c, c.getCategories()));
@@ -40,9 +41,9 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
 		Product product = this.productRepository
-								.findById(id)
-								.orElseThrow(() -> new ResourceNotFoundException("Produto não Encontrado!"));
-		
+			.findById(id)
+			.orElseThrow(() -> new ResourceNotFoundException("Produto não Encontrado!"));
+
 		return new ProductDTO(product, product.getCategories());
 	}
 	

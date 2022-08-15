@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,16 +30,9 @@ public class ProductResource {
 	private ProductService productService;
 	
 	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAll(
-			@RequestParam(value = "page", defaultValue = "0") Integer page,
-			@RequestParam(value = "linesPerPage", defaultValue = "5") Integer linesPerPage,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy
-			) {
+	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
 		
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		
-		Page<ProductDTO> products = this.productService.findAllPaged(pageRequest); 
+		Page<ProductDTO> products = this.productService.findAllPaged(pageable);
 		return ResponseEntity.ok(products);
 	}
 	
@@ -55,9 +49,9 @@ public class ProductResource {
 		
 		/*Uri de acesso a nova categoria criada!*/
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				                             .path("/{id}")
-				                             .buildAndExpand(dto.getId())
-				                             .toUri();
+					 .path("/{id}")
+					 .buildAndExpand(dto.getId())
+					 .toUri();
 		
 		return ResponseEntity.created(uri).body(dto);
 	}
@@ -75,5 +69,4 @@ public class ProductResource {
 		this.productService.delete(idProduct);
 		return ResponseEntity.noContent().build();
 	}
-	
 }
