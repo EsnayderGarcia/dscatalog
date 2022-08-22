@@ -2,6 +2,7 @@ package com.snayder.dscatalog.services;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -30,12 +31,10 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
 			
-		Page<Product> categories = this.productRepository.findAll(pageable);
+		Page<Product> products = this.productRepository.findAll(pageable);
 		
-		/*O page já é um stream*/
-		Page<ProductDTO> dtos = categories.map(c -> new ProductDTO(c, c.getCategories()));
-										   
-		return dtos;
+		/*O Pageable já é um Stream*/
+		return products.map(c -> new ProductDTO(c, c.getCategories()));
 	}
 	
 	@Transactional(readOnly = true)
@@ -50,7 +49,7 @@ public class ProductService {
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product product = new Product();
-		
+
 		this.convertToProduct(dto, product);
 		product = this.productRepository.save(product);
 		
@@ -59,7 +58,6 @@ public class ProductService {
 	
 	@Transactional
 	public ProductDTO update(Long idProduct, ProductDTO dto) {
-		
 		try {
 			Product product = this.productRepository.getOne(idProduct);
 			
