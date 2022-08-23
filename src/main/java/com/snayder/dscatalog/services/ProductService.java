@@ -30,9 +30,7 @@ public class ProductService {
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
-			
 		Page<Product> products = this.productRepository.findAll(pageable);
-		
 		/*O Pageable já é um Stream*/
 		return products.map(c -> new ProductDTO(c, c.getCategories()));
 	}
