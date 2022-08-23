@@ -16,9 +16,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,6 +76,47 @@ public class ProductServiceTest {
         Mockito.when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
 
         Mockito.when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+    }
+
+
+
+    @Test
+    public void insertShouldReturnProductDTO() {
+        productDTO.setId(null);
+        ProductDTO result = this.productService.insert(productDTO);
+
+        Mockito.verify(productRepository).save(ArgumentMatchers.any());
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(ProductDTO.class, result.getClass());
+        Assertions.assertEquals(1L, result.getId());
+    }
+
+    @Test
+    public void findBydIdShouldReturnProductDTOWhenIdExists() {
+        ProductDTO result = this.productService.findById(existingId);
+
+        Mockito.verify(productRepository).findById(existingId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(ProductDTO.class, result.getClass());
+        Assertions.assertEquals(existingId, result.getId());
+    }
+
+    @Test
+    public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            ProductDTO result = this.productService.findById(nonExistingId);
+        });
+    }
+
+    @Test
+    public void findAllPagedShouldReturnPage() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<ProductDTO> result = this.productService.findAllPaged(pageable);
+
+        Mockito.verify(productRepository).findAll(pageable);
+        Assertions.assertNotNull(result);
     }
 
     @Test
