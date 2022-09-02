@@ -26,7 +26,7 @@ import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 public class ProductService {
 	
 	@Autowired
-	private ProductRepository productRepository;
+	ProductRepository productRepository;
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {

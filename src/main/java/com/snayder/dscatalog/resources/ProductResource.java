@@ -43,7 +43,6 @@ public class ProductResource {
 	
 	@PostMapping
 	public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
-		
 		dto = this.productService.insert(dto);
 		
 		/*Uri de acesso ao novo produto criado!*/
