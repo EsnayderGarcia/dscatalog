@@ -31,7 +31,6 @@ public class ProductResource {
 	
 	@GetMapping
 	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
-		
 		Page<ProductDTO> products = this.productService.findAllPaged(pageable);
 		return ResponseEntity.ok(products);
 	}
@@ -47,7 +46,7 @@ public class ProductResource {
 		
 		dto = this.productService.insert(dto);
 		
-		/*Uri de acesso a nova categoria criada!*/
+		/*Uri de acesso ao novo produto criado!*/
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 					 .path("/{id}")
 					 .buildAndExpand(dto.getId())
