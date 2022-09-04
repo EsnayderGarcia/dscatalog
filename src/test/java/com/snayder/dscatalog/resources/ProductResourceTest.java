@@ -1,9 +1,11 @@
 package com.snayder.dscatalog.resources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snayder.dscatalog.dtos.ProductDTO;
 import com.snayder.dscatalog.services.ProductService;
 import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.snayder.dscatalog.tests.Factory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +15,23 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductResource.class)
 public class ProductResourceTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private ProductService productService;
@@ -45,11 +52,53 @@ public class ProductResourceTest {
         page = new PageImpl<>(List.of(productDTO));
 
         doThrow(ResourceNotFoundException.class)
+                .when(productService).update(eq(nonExistingId), any());
+
+        when(productService.update(eq(existingId), any())).thenReturn(productDTO);
+
+        doThrow(ResourceNotFoundException.class)
                 .when(productService).findById(nonExistingId);
 
         when(productService.findAllPaged(any())).thenReturn(page);
 
         when(productService.findById(existingId)).thenReturn(productDTO);
+
+    }
+
+    @Test
+    public void updateShouldNotFoundWhenIdDoesNotExist() throws Exception {
+        String jsonBody = mapper.writeValueAsString(productDTO);
+
+        ResultActions result = mockMvc
+                .perform(put("/products/{idProduct}", nonExistingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).update(eq(nonExistingId), any());
+
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
+        /*Converte o ProductDTO para um formato Json!*/
+        String jsonBody = mapper.writeValueAsString(productDTO);
+
+        ResultActions result = mockMvc
+                .perform(put("/products/{idProduct}", existingId)
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).update(eq(existingId), any());
+
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+        result.andExpect(jsonPath("$.price").exists());
+        result.andExpect(jsonPath("$.imgUrl").exists());
     }
 
     @Test
@@ -59,7 +108,6 @@ public class ProductResourceTest {
                         .accept(MediaType.APPLICATION_JSON));
 
         verify(productService).findById(nonExistingId);
-
         result.andExpect(status().isNotFound());
     }
 
