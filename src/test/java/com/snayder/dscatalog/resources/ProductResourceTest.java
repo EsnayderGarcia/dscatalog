@@ -1,8 +1,10 @@
 package com.snayder.dscatalog.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snayder.dscatalog.dtos.ProductDTO;
 import com.snayder.dscatalog.services.ProductService;
+import com.snayder.dscatalog.services.exceptions.DataBaseException;
 import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.snayder.dscatalog.tests.Factory;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductResource.class)
 public class ProductResourceTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -44,12 +47,21 @@ public class ProductResourceTest {
 
     private Long nonExistingId;
 
+    private Long dependentId;
+
     @BeforeEach
     void setup() {
         existingId = 1L;
         nonExistingId = 2L;
+        dependentId = 3L;
         productDTO = Factory.createProductDTO();
         page = new PageImpl<>(List.of(productDTO));
+
+        when(productService.insert(any())).thenReturn(productDTO);
+
+        doNothing().when(productService).delete(existingId);
+
+        doThrow(DataBaseException.class).when(productService).delete(dependentId);
 
         doThrow(ResourceNotFoundException.class)
                 .when(productService).update(eq(nonExistingId), any());
@@ -62,7 +74,26 @@ public class ProductResourceTest {
         when(productService.findAllPaged(any())).thenReturn(page);
 
         when(productService.findById(existingId)).thenReturn(productDTO);
+    }
 
+    @Test
+    public void insertShouldReturnProductDTO() throws Exception {
+        String jsonBody = mapper.writeValueAsString(productDTO);
+
+        ResultActions result = mockMvc.perform(post("/products")
+                .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).insert(any());
+
+        result.andExpect(status().isCreated());
+
+        result.andExpect(jsonPath("$.id").exists());
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+        result.andExpect(jsonPath("$.price").exists());
+        result.andExpect(jsonPath("$.imgUrl").exists());
     }
 
     @Test
@@ -76,7 +107,6 @@ public class ProductResourceTest {
                         .accept(MediaType.APPLICATION_JSON));
 
         verify(productService).update(eq(nonExistingId), any());
-
         result.andExpect(status().isNotFound());
     }
 
@@ -128,11 +158,12 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void findAllShouldReturnHttpStatusOk() throws Exception {
+    public void findAllShouldReturnStatusCodeOk() throws Exception {
         ResultActions result = mockMvc.perform(get("/products")
                 .accept(MediaType.APPLICATION_JSON));
 
         verify(productService).findAllPaged(any());
         result.andExpect(status().isOk());
     }
+
 }
