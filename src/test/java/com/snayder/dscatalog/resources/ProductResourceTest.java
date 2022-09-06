@@ -59,25 +59,58 @@ public class ProductResourceTest {
 
         when(productService.insert(any())).thenReturn(productDTO);
 
-        doNothing().when(productService).delete(existingId);
+        doThrow(ResourceNotFoundException.class)
+                .when(productService).delete(nonExistingId);
 
         doThrow(DataBaseException.class).when(productService).delete(dependentId);
+
+        doNothing().when(productService).delete(existingId);
+
+        when(productService.update(eq(existingId), any())).thenReturn(productDTO);
 
         doThrow(ResourceNotFoundException.class)
                 .when(productService).update(eq(nonExistingId), any());
 
-        when(productService.update(eq(existingId), any())).thenReturn(productDTO);
+        when(productService.findById(existingId)).thenReturn(productDTO);
 
         doThrow(ResourceNotFoundException.class)
                 .when(productService).findById(nonExistingId);
 
         when(productService.findAllPaged(any())).thenReturn(page);
-
-        when(productService.findById(existingId)).thenReturn(productDTO);
     }
 
     @Test
-    public void insertShouldReturnProductDTO() throws Exception {
+    public void deleteShouldReturnBadRequestWhenDependentId() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{idProduct}", dependentId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).delete(dependentId);
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{idProduct}", nonExistingId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).delete(nonExistingId);
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{idProduct}", existingId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        verify(productService).delete(existingId);
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void insertShouldReturnProductDTOCreated() throws Exception {
         String jsonBody = mapper.writeValueAsString(productDTO);
 
         ResultActions result = mockMvc.perform(post("/products")
