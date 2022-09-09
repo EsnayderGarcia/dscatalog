@@ -3,6 +3,7 @@ package com.snayder.dscatalog.services;
 import com.snayder.dscatalog.dtos.ProductDTO;
 import com.snayder.dscatalog.repositories.ProductRepository;
 import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.snayder.dscatalog.tests.Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class ProductServiceIntegrationTest {
 
     private Long totalProducts;
 
+    private ProductDTO productDTO;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -36,6 +39,18 @@ public class ProductServiceIntegrationTest {
         existingId = 1L;
         nonExistingId = 1000L;
         totalProducts = 25L;
+        productDTO = Factory.createProductDTO();
+    }
+
+    @Test
+    public void insertShouldReturnProductDTO() {
+        productDTO.setId(null);
+        ProductDTO result = productService.insert(productDTO);
+
+        assertNotNull(result);
+
+        assertEquals(ProductDTO.class, result.getClass());
+        assertEquals(totalProducts + 1, result.getId());
     }
 
     @Test
