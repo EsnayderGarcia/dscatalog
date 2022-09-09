@@ -43,6 +43,25 @@ public class ProductServiceIntegrationTest {
     }
 
     @Test
+    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        Throwable exception =  assertThrows(ResourceNotFoundException.class, () ->
+                productService.update(nonExistingId, productDTO));
+
+        assertEquals("Produto não encontrado para atualização", exception.getMessage());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() {
+        ProductDTO result = productService.update(existingId, productDTO);
+
+        assertNotNull(result);
+
+        assertEquals(ProductDTO.class, result.getClass());
+        assertEquals(existingId, result.getId());
+        assertNotEquals("The Lord of the Rings", result.getName());
+    }
+
+    @Test
     public void insertShouldReturnProductDTO() {
         productDTO.setId(null);
         ProductDTO result = productService.insert(productDTO);
@@ -84,9 +103,11 @@ public class ProductServiceIntegrationTest {
 
     @Test
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
-        assertThrows(ResourceNotFoundException.class, () ->
+        Throwable exception =  assertThrows(ResourceNotFoundException.class, () ->
                 productService.delete(nonExistingId)
         );
+
+        assertEquals("Produto não encontrado para exclusão", exception.getMessage());
     }
 
 }
