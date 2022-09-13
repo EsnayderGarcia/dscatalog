@@ -1,6 +1,5 @@
 package com.snayder.dscatalog.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snayder.dscatalog.dtos.ProductDTO;
 import com.snayder.dscatalog.tests.Factory;
@@ -129,4 +128,29 @@ public class ProductResourceIntegrationTest {
         result.andExpect(jsonPath("$.error")
                 .value("Produto não encontrado para exclusão"));
     }
+
+    @Test
+    public void findByIdShouldReturnProductDTOWhenIdExists() throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/products/{idProduct}", existingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk());
+
+        result.andExpect(jsonPath("$.id").value(existingId));
+        result.andExpect(jsonPath("$.name").value("The Lord of the Rings"));
+        result.andExpect(jsonPath("$.price").value(90.5));
+    }
+
+    @Test
+    public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        ResultActions result = mockMvc
+                .perform(get("/products/{idProduct}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.error")
+                .value("Produto não Encontrado!"));
+    }
+
 }
