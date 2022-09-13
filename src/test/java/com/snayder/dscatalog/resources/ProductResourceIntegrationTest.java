@@ -110,4 +110,23 @@ public class ProductResourceIntegrationTest {
                 .value("Produto não encontrado para atualização"));
     }
 
+    @Test
+    public void deleteShouldDeleteWhenIdExists() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{idProduct}", existingId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{idProduct}", nonExistingId)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.error")
+                .value("Produto não encontrado para exclusão"));
+    }
 }
