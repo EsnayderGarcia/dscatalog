@@ -153,4 +153,20 @@ public class ProductResourceIntegrationTest {
                 .value("Produto não Encontrado!"));
     }
 
+    @Test
+    public void insertShouldReturnProductDTOCreated() throws Exception{
+        productDTO.setId(null);
+
+        String jsonBody = mapper.writeValueAsString(productDTO);
+
+        ResultActions result = mockMvc
+                .perform(post("/products")
+                        .content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isCreated());
+        result.andExpect(jsonPath("$.id").value(totalProducts + 1));
+    }
+
 }
