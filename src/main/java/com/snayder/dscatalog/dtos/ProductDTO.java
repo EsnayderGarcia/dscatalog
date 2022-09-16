@@ -1,5 +1,6 @@
 package com.snayder.dscatalog.dtos;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import com.snayder.dscatalog.entities.Product;
 
 public class ProductDTO implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;

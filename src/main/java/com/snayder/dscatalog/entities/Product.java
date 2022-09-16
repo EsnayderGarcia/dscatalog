@@ -1,5 +1,6 @@
 package com.snayder.dscatalog.entities;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -19,7 +20,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {
-	
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 	
 	@Id
