@@ -47,7 +47,7 @@ public class ProductResourceIntegrationTest {
     @Test
     public void findAllShouldReturnSortedPageWhenSortByIncome() throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/products?size=5&page=0&sort=price,desc")
+                .perform(get("/products?size=5&page=0&sort=price&direction=DESC")
                         .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk());

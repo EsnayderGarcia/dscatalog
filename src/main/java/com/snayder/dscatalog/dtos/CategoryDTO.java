@@ -1,5 +1,6 @@
 package com.snayder.dscatalog.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.snayder.dscatalog.entities.Category;
 
 import java.io.Serial;
@@ -11,6 +12,7 @@ public class CategoryDTO implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
 	private String name;

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.snayder.dscatalog.entities.Category;
 import com.snayder.dscatalog.entities.Product;
 
@@ -15,7 +16,8 @@ public class ProductDTO implements Serializable {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
-	
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
 	private String name;
@@ -30,9 +32,7 @@ public class ProductDTO implements Serializable {
 	
 	private List<CategoryDTO> categories = new ArrayList<>();
 	
-	public ProductDTO() {
-	
-	}
+	public ProductDTO() {}
 
 	public ProductDTO(Long id, String name, String description, Double price, String imgUrl, Instant date) {
 		this.id = id;
