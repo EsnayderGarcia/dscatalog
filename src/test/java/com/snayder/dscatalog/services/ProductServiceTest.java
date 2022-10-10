@@ -1,11 +1,10 @@
 package com.snayder.dscatalog.services;
 
-import com.snayder.dscatalog.dtos.ProductDTO;
-import com.snayder.dscatalog.entities.Product;
-import com.snayder.dscatalog.repositories.ProductRepository;
-import com.snayder.dscatalog.services.exceptions.DataBaseException;
-import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
-import com.snayder.dscatalog.tests.Factory;
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +20,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
+import com.snayder.dscatalog.dtos.ProductDTO;
+import com.snayder.dscatalog.entities.Product;
+import com.snayder.dscatalog.repositories.ProductRepository;
+import com.snayder.dscatalog.services.exceptions.DataBaseException;
+import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.snayder.dscatalog.tests.Factory;
 
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTest {

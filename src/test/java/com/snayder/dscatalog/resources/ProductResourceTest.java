@@ -1,13 +1,20 @@
 package com.snayder.dscatalog.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snayder.dscatalog.dtos.ProductDTO;
-import com.snayder.dscatalog.services.ProductService;
-import com.snayder.dscatalog.services.exceptions.DataBaseException;
-import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
-import com.snayder.dscatalog.tests.Factory;
-import org.junit.jupiter.api.Assertions;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +24,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snayder.dscatalog.dtos.ProductDTO;
+import com.snayder.dscatalog.services.ProductService;
+import com.snayder.dscatalog.services.exceptions.DataBaseException;
+import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.snayder.dscatalog.tests.Factory;
 
 @WebMvcTest(ProductResource.class)
 public class ProductResourceTest {

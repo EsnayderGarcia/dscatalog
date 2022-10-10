@@ -1,9 +1,11 @@
 package com.snayder.dscatalog.services;
 
-import com.snayder.dscatalog.dtos.ProductDTO;
-import com.snayder.dscatalog.repositories.ProductRepository;
-import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
-import com.snayder.dscatalog.tests.Factory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.snayder.dscatalog.dtos.ProductDTO;
+import com.snayder.dscatalog.repositories.ProductRepository;
+import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.snayder.dscatalog.tests.Factory;
 
 @SpringBootTest
 @Transactional

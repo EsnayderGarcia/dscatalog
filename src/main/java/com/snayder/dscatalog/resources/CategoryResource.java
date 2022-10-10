@@ -3,6 +3,8 @@ package com.snayder.dscatalog.resources;
 import com.snayder.dscatalog.dtos.CategoryDTO;
 import com.snayder.dscatalog.services.CategoryService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,8 @@ public class CategoryResource {
 
     @GetMapping("/{idCategory}")
     @ApiOperation("Busca de uma categoria por id")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long idCategory) {
+    public ResponseEntity<CategoryDTO> findById(
+    		@PathVariable @ApiParam(value = "Id da Categoria", example = "1") Long idCategory) {
         CategoryDTO category = this.categoryService.findById(idCategory);
         return ResponseEntity.ok(category);
     }
@@ -47,15 +50,17 @@ public class CategoryResource {
 
     @PutMapping("/{idCategory}")
     @ApiOperation("Atualização de uma categoria")
-    public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO dto,
-                                              @PathVariable Long idCategory) {
+    public ResponseEntity<CategoryDTO> update(
+    		  @RequestBody CategoryDTO dto,
+              @PathVariable @ApiParam(value = "Id da Categoria", example = "1") Long idCategory) {
         dto = this.categoryService.update(idCategory, dto);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{idCategory}")
     @ApiOperation("Exclusão de uma categoria por id")
-    public ResponseEntity<Void> delete(@PathVariable Long idCategory) {
+    public ResponseEntity<Void> delete(
+    		@PathVariable @ApiParam(value = "Id da Categoria", example = "1") Long idCategory) {
         this.categoryService.delete(idCategory);
         return ResponseEntity.noContent().build();
     }
