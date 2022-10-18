@@ -3,75 +3,66 @@
 Neste aplicação está sendo desenvolvida uma API Rest que fornece recursos de um CRUD de categorias, produtos e usuários de um catálogo de produtos online. Esta é um dos
 projetos práticos desenvolvidos no bootcamp spring 3.0 ministrado pelo Professor Nélio Alves.
 
-## Tecnologias utilizadas
-- Java 17;
-- Spring Boot 2.4;
-- Spring Data JPA;
-- Banco de Dados H2.
-
-Ainda serão implementados os testes unitários e de integração utilizando a o Junit 5, e a camada de segurança com o Spring Security.
-
-## Modelo Conceitual do dscatalog
-
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183255418-0b46bbfb-6368-4ea8-a1d3-74d51e9c1359.png width=850px />
-</div>
+<h3 align="center">Status do Projeto: Em Desenvolvimento💻</h3>
 
 ## Features
+### Categorias
+- [x] Cadastrar categoria
+- [x] Editar categoria
+- [x] Remover categoria
+- [x] Buscar categoria por id
+- [x] Busca de todas as categorias
 
-### Category
-- Inserção;
-- Atualização;
-- Deleção;
-- Consulta paginada e por id.
+### Produtos
+- [x] Cadastrar produto
+- [x] Editar produto
+- [x] Remover produto
+- [x] Buscar produto por id
+- [x] Busca paginada de produtos
 
-### Product
-- Inserção;
-- Atualização;
-- Deleção;
-- Consulta paginada e por id.
+<p>Também foram implementados os teste unitários e de integração para as camadas de repository, service e resource de produtos.</p>
 
-Abaixo alguns recuros sendo acessados no Insomnia:
+## Tecnologias utilizadas até aqui
+- Java 17
+- Spring Boot 2.4.4
+- Spring Data JPA
+- Banco de Dados H2
+- Swagger 3.0.0
+- Heroku Cloud
+- Junit e Mockito para testes unitários e de integração
 
-- Inserção de categoria e produto na base de dados
+Ainda será implementada a camada de segurança com o Spring Security.
 
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256249-a50d9149-4c6f-4df2-aa23-8cda5a636371.png width=850px />
+## Modelo Conceitual do dscatalog
+<div>   
+ <img src=https://user-images.githubusercontent.com/108491940/183255418-0b46bbfb-6368-4ea8-a1d3-74d51e9c1359.png width=750px />
 </div>
 
-</br>
-
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256250-16a2cd3f-4516-416e-95a2-ea3b3c0e0298.png width=850px />
+## Endpoints category-resource
+<div>   
+ <img src=https://user-images.githubusercontent.com/108491940/196527379-a6c1297b-c780-4211-af76-885dc6c60fb1.png width=750px />
 </div>
 
-</br>
-</br>
-
-- Busca por id de categoria e produto
-
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256371-8ec42a95-f9d3-46d5-b004-212a5cc880ae.png width=850px />
+## Endpoints product-resource
+<div>   
+ <img src=https://user-images.githubusercontent.com/108491940/196527706-aba7c9c9-30d8-478c-8c2c-895620348c10.png width=850px />
 </div>
 
-</br>
+## Acesse o projeto 
+<a href="http://dscatalog-api.herokuapp.com/swagger-ui/index.html">🚀 DSCATALOG</a>
 
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256374-7722abd9-84c3-4091-809d-b02e83570083.png width=850px />
-</div>
+OBS: A plataforma Heroku coloca em hibernação as aplicações que estão algum tempo sem requisições. Então, caso  o projeto não abra de primeira, por favor, aguarde alguns segundos. Obrigado!
 
-</br>
-</br>
 
-- Tratamento de Exceção ao tentar deletar um produto ou categoria ausente na base de dados
 
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256479-c11801f6-0382-4c09-b75c-7a60f2b96a4b.png width=850px />
-</div>
 
-</br>
 
-<div align=center>   
- <img src=https://user-images.githubusercontent.com/108491940/183256480-0c723aaf-c616-4a27-a0a4-06a21b87f272.png width=850px />
-</div>
+
+
+
+
+
+
+
+
 
