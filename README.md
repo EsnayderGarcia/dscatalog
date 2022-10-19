@@ -45,7 +45,7 @@ Ainda será implementada a camada de segurança com o Spring Security.
 
 ## Endpoints product-resource
 <div>   
- <img src=https://user-images.githubusercontent.com/108491940/196527706-aba7c9c9-30d8-478c-8c2c-895620348c10.png width=850px />
+ <img src=https://user-images.githubusercontent.com/108491940/196527706-aba7c9c9-30d8-478c-8c2c-895620348c10.png width=1000px />
 </div>
 
 ## Acesse o projeto 
