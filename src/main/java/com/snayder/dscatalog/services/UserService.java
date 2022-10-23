@@ -7,10 +7,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.snayder.dscatalog.dtos.UserDTO;
+import com.snayder.dscatalog.dtos.UserInsertDTO;
 import com.snayder.dscatalog.entities.Role;
 import com.snayder.dscatalog.entities.User;
 import com.snayder.dscatalog.repositories.UserRepository;
@@ -23,14 +25,10 @@ import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 public class UserService {
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
-	@Transactional(readOnly = true)
-	public Page<UserDTO> findAllPaged(Pageable pageable) {
-		/*O Pageable já é um Stream*/
-		Page<User> users = userRepository.findAll(pageable);
-		return users.map(UserDTO::new);
-	}
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
@@ -39,12 +37,20 @@ public class UserService {
 
 		return new UserDTO(user);
 	}
+	
+	@Transactional(readOnly = true)
+	public Page<UserDTO> findAllPaged(Pageable pageable) {
+		/*O Pageable já é um Stream*/
+		Page<User> users = userRepository.findAll(pageable);
+		return users.map(UserDTO::new);
+	}
 
 	@Transactional
-	public UserDTO insert(UserDTO dto) {
+	public UserDTO insert(UserInsertDTO dto) {
 		User user = new User();
 
 		convertToUser(dto, user);
+		user.setPassword(encoder.encode(dto.getPassword()));
 		user = userRepository.save(user);
 		
 		return new UserDTO(user);
@@ -57,6 +63,7 @@ public class UserService {
 			
 			user.getRoles().clear();
 			convertToUser(dto, user);
+	
 			user = userRepository.save(user);
 			
 			return new UserDTO(user);

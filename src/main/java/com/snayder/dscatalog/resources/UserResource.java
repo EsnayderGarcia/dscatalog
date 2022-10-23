@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.snayder.dscatalog.dtos.UserDTO;
+import com.snayder.dscatalog.dtos.UserInsertDTO;
 import com.snayder.dscatalog.services.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -55,15 +56,15 @@ public class UserResource {
 
     @PostMapping
     @ApiOperation("Inserção de um usuário")
-    public ResponseEntity<UserDTO> insert(@RequestBody UserDTO dto) {
-        dto = this.userService.insert(dto);
+    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO dto) {
+        UserDTO userDTO = this.userService.insert(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(dto.getId())
+                .buildAndExpand(userDTO.getId())
                 .toUri();
 
-        return ResponseEntity.created(uri).body(dto);
+        return ResponseEntity.created(uri).body(userDTO);
     }
 
     @PutMapping("/{idUser}")
