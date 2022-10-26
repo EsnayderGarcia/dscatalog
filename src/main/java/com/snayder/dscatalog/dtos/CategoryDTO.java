@@ -4,6 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
+
 import com.snayder.dscatalog.entities.Category;
 
 public class CategoryDTO implements Serializable {
@@ -13,6 +15,7 @@ public class CategoryDTO implements Serializable {
 
 	private Long id;
 	
+	@NotBlank(message = "O nome da categoria é obrigatório")
 	private String name;
 	
 	public CategoryDTO() {

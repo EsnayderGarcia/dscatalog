@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -41,6 +42,23 @@ public class ResourceExceptionHandler {
 		error.setPath(req.getRequestURI());
 		
 		return ResponseEntity.badRequest().body(error);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ValidError> notValidArgument(MethodArgumentNotValidException ex,
+			HttpServletRequest req) {
+		ValidError error = new ValidError();
+		
+		error.setTimestamp(LocalDateTime.now());
+		error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		error.setError("Um ou mais campos estão inválidos");
+		error.setPath(req.getRequestURI());
+		
+		ex.getBindingResult()
+			.getFieldErrors()
+			.forEach(f -> error.addError(new FieldError(f.getField(), f.getDefaultMessage())));
+		
+		return ResponseEntity.unprocessableEntity().body(error);
 	}
 }
 

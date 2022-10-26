@@ -4,6 +4,8 @@ import static org.springframework.data.domain.Sort.Direction.valueOf;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,7 +57,7 @@ public class ProductResource {
 
     @PostMapping
     @ApiOperation("Inserção de um produto")
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         dto = this.productService.insert(dto);
 
         /*Uri de acesso ao novo produto criado!*/
@@ -70,7 +72,7 @@ public class ProductResource {
     @PutMapping("/{idProduct}")
     @ApiOperation("Atualização de um produto")
     public ResponseEntity<ProductDTO> update(
-    		@RequestBody ProductDTO dto,
+    		@Valid @RequestBody ProductDTO dto,
             @PathVariable @ApiParam(value = "Id do Produto", example = "1") Long idProduct) { 
         dto = this.productService.update(idProduct, dto);
         return ResponseEntity.ok(dto);

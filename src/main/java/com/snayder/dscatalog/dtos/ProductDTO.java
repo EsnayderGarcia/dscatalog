@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+
 import com.snayder.dscatalog.entities.Category;
 import com.snayder.dscatalog.entities.Product;
 
@@ -17,19 +22,25 @@ public class ProductDTO implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	
+	@NotBlank(message = "O nome do produto é obrigatório")
 	private String name;
 	
+	@NotBlank(message = "A descrição do produto é obrigatório")
 	private String description;
 	
+	@Positive(message = "O preço do produto deve ser um valor positivo")
+	@NotNull(message = "O preço do produto é obrigatório")
 	private Double price;
 	
 	private String imgUrl;
 	
+	@PastOrPresent(message = "A data não pode ser futura")
 	private Instant date;
 	
+	@NotEmpty(message = "As categorias do produto devem ser informadas")
+	@NotNull(message = "As categorias do produto devem ser informadas")
 	private List<CategoryDTO> categories = new ArrayList<>();
 	
 	public ProductDTO() {}

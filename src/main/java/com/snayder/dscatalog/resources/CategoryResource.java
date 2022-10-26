@@ -13,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryResource {
@@ -37,7 +39,7 @@ public class CategoryResource {
 
     @PostMapping
     @ApiOperation("Inserção de uma nova categoria")
-    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
+    public ResponseEntity<CategoryDTO> insert(@Valid @RequestBody CategoryDTO dto) {
         dto = this.categoryService.insert(dto);
         /*Uri de acesso a nova categoria criada!*/
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -51,7 +53,7 @@ public class CategoryResource {
     @PutMapping("/{idCategory}")
     @ApiOperation("Atualização de uma categoria")
     public ResponseEntity<CategoryDTO> update(
-    		  @RequestBody CategoryDTO dto,
+    		  @Valid @RequestBody CategoryDTO dto,
               @PathVariable @ApiParam(value = "Id da Categoria", example = "1") Long idCategory) {
         dto = this.categoryService.update(idCategory, dto);
         return ResponseEntity.ok(dto);

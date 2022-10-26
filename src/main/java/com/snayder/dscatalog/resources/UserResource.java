@@ -4,6 +4,8 @@ import static org.springframework.data.domain.Sort.Direction.valueOf;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,7 +58,7 @@ public class UserResource {
 
     @PostMapping
     @ApiOperation("Inserção de um usuário")
-    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO dto) {
+    public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto) {
         UserDTO userDTO = this.userService.insert(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -70,7 +72,7 @@ public class UserResource {
     @PutMapping("/{idUser}")
     @ApiOperation("Atualização de um usuário")
     public ResponseEntity<UserDTO> update(
-    		@RequestBody UserDTO dto,
+    		@Valid @RequestBody UserDTO dto,
             @PathVariable @ApiParam(value = "Id do usuário", example = "1") Long idUser) { 
         dto = this.userService.update(idUser, dto);
         return ResponseEntity.ok(dto);

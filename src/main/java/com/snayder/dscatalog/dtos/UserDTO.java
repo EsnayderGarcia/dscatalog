@@ -5,20 +5,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.snayder.dscatalog.entities.User;
 
 public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private Long id;
 	
+	@NotBlank(message = "O nome é obrigatório")
 	private String firstName;
 	
+	@NotBlank(message = "O sobrenome é obrigatório")
 	private String lastName;
 	
+	@Email(message = "Informe um email válido")
+	@NotBlank(message = "O email é obrigatório")
 	private String email;
 	
+	@NotEmpty(message = "As permissões do usuário devem ser informadas")
+	@NotNull(message = "As permissões do usuário devem ser informadas")
 	private List<RoleDTO> roles = new ArrayList<>();
 	
 	public UserDTO() {}
