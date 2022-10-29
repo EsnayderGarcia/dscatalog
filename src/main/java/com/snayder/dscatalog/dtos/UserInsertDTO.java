@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.snayder.dscatalog.services.validations.UserInsertValid;
+
+@UserInsertValid
 public class UserInsertDTO extends UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;

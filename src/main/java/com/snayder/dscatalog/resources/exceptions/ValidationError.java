@@ -4,21 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidError extends StandardError implements Serializable {
+public class ValidationError extends StandardError implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<FieldError> errors = new ArrayList<>();
+	private List<FieldMessage> errors = new ArrayList<>();
 	
-	public ValidError() {
+	public ValidationError() {
 		super();
 	}
 	
-	public List<FieldError> getErrors() {
+	public List<FieldMessage> getErrors() {
 		return errors;
 	}
 
-	public void addError(FieldError error) {
+	public void addError(FieldMessage error) {
 		errors.add(error);
 	}
 	

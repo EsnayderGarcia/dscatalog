@@ -2,14 +2,14 @@ package com.snayder.dscatalog.resources.exceptions;
 
 import java.io.Serializable;
 
-public class FieldError  implements Serializable {
+public class FieldMessage  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String field;
 	private String message;
 	
-	public FieldError(String field, String message) {
+	public FieldMessage(String field, String message) {
 		this.field = field;
 		this.message = message;
 	}
