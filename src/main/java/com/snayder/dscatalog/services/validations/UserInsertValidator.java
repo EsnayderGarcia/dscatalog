@@ -22,8 +22,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
 		
 		List<FieldMessage> list = new ArrayList<>();
 		
-		// Coloque aqui seus testes de validação, acrescentando objetos FieldMessage à lista
-		if(emailAlreadyExists(dto.getEmail())) {
+		if(hasUserWithThisEmail(dto.getEmail())) {
 			list.add(new FieldMessage("email", "O email informado já existe"));
 		}
 		
@@ -37,7 +36,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
 		return list.isEmpty();
 	}
 	
-	private boolean emailAlreadyExists(String email) {
+	private boolean hasUserWithThisEmail(String email) {
 		return userRepository.findByEmail(email).isPresent();
 	}
 

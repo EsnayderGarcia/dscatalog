@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.snayder.dscatalog.dtos.UserDTO;
 import com.snayder.dscatalog.dtos.UserInsertDTO;
+import com.snayder.dscatalog.dtos.UserUpdateDTO;
 import com.snayder.dscatalog.services.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -44,22 +45,22 @@ public class UserResource {
             @RequestParam(defaultValue = "ASC") @ApiParam(value = "Tipo da Ordenação") String direction,
             @RequestParam(defaultValue = "firstName") @ApiParam(value = "Informe por qual dado os us serão ordenados") String sort) {
         Pageable pageable = PageRequest.of(page, size, valueOf(direction.toUpperCase()), sort);
-        Page<UserDTO> users = this.userService.findAllPaged(pageable);
+        Page<UserDTO> users = userService.findAllPaged(pageable);
 
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{idUser}")
+    @GetMapping("/{userId}")
     @ApiOperation("Busca de um usuário por id")
-    public ResponseEntity<UserDTO> findById(@PathVariable @ApiParam(value = "Id do Usuário", example = "1") Long idUser) {
-    	UserDTO user = this.userService.findById(idUser);
+    public ResponseEntity<UserDTO> findById(@PathVariable @ApiParam(value = "Id do Usuário", example = "1") Long userId) {
+    	UserDTO user = userService.findById(userId);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
     @ApiOperation("Inserção de um usuário")
     public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto) {
-        UserDTO userDTO = this.userService.insert(dto);
+        UserDTO userDTO = userService.insert(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -69,20 +70,20 @@ public class UserResource {
         return ResponseEntity.created(uri).body(userDTO);
     }
 
-    @PutMapping("/{idUser}")
+    @PutMapping("/{userId}")
     @ApiOperation("Atualização de um usuário")
     public ResponseEntity<UserDTO> update(
-    		@Valid @RequestBody UserDTO dto,
-            @PathVariable @ApiParam(value = "Id do usuário", example = "1") Long idUser) { 
-        dto = this.userService.update(idUser, dto);
-        return ResponseEntity.ok(dto);
+    		@Valid @RequestBody UserUpdateDTO dto,
+            @PathVariable @ApiParam(value = "Id do usuário", example = "1") Long userId) { 
+        UserDTO userDTO = userService.update(userId, dto);
+        return ResponseEntity.ok(userDTO);
     }
 
-    @DeleteMapping("/{idUser}")
+    @DeleteMapping("/{userId}")
     @ApiOperation("Deleção de um user por id")
     public ResponseEntity<Void> delete(
-    		@PathVariable @ApiParam(value = "Id do user", example = "1") Long idUser) {
-        this.userService.delete(idUser);
+    		@PathVariable @ApiParam(value = "Id do user", example = "1") Long userId) {
+        userService.delete(userId);
         return ResponseEntity.noContent().build();
     }
 }
