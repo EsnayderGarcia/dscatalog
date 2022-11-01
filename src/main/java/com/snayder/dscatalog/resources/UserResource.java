@@ -43,7 +43,7 @@ public class UserResource {
             @RequestParam(defaultValue = "0") @ApiParam(value = "Número da Página") int page,
             @RequestParam(defaultValue = "10") @ApiParam(value = "Produtos por Página") int size,
             @RequestParam(defaultValue = "ASC") @ApiParam(value = "Tipo da Ordenação") String direction,
-            @RequestParam(defaultValue = "firstName") @ApiParam(value = "Informe por qual dado os us serão ordenados") String sort) {
+            @RequestParam(defaultValue = "firstName") @ApiParam(value = "Informe por qual dado os usuários serão ordenados") String sort) {
         Pageable pageable = PageRequest.of(page, size, valueOf(direction.toUpperCase()), sort);
         Page<UserDTO> users = userService.findAllPaged(pageable);
 
