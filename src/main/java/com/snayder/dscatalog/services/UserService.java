@@ -1,12 +1,19 @@
 package com.snayder.dscatalog.services;
 
+import java.util.Optional;
+
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +30,15 @@ import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 /*Essa anotação vai registrar esta classe como um componente*/ 
 /*que vai participar do sistema de injeção de dependência do spring*/
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 	
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
@@ -92,6 +101,19 @@ public class UserService {
 		user.setEmail(dto.getEmail());
 		
 		dto.getRoles().forEach(r -> user.getRoles().add(new Role(r)));
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Optional<User> optUser = userRepository.findByEmail(username);
+		
+		if(optUser.isEmpty()) {
+			LOGGER.error("Usuário não encontrado: "+username);
+			throw new UsernameNotFoundException("Email não encontrado");
+		}
+		
+		LOGGER.info("Usuário encontrado: "+username);
+		return optUser.get();
 	}
 
 }
