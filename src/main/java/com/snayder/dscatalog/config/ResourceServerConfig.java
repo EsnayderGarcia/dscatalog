@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	
+	/*No ResourceServer liberamos os endpoints de acordo com as roles*/
+	
 	@Autowired
 	private JwtTokenStore tokenStore;
 	
@@ -30,7 +32,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-		resources.tokenStore(tokenStore);
+		resources.tokenStore(tokenStore); /*Esta configuração permitirá ao ResourceServer decodificar o Token e assim analisar a validade das informações passadas.*/	
 	}
 
 	@Override
@@ -39,7 +41,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		if(Arrays.asList(env.getActiveProfiles()).contains("test")) 
 			http.headers().frameOptions().disable();
 		
-		http.authorizeRequests()
+		http.authorizeRequests() /*antMatchers define as autorizações*/
 			 .antMatchers(PUBLIC).permitAll()
 			 .antMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
 			 .antMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")

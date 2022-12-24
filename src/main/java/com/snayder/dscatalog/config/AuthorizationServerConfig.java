@@ -52,11 +52,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
 	}
 
+	/*Nesse método, definimos como será feita nossa autenticação, e configuramos as credenciais da aplicação*/
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 		.withClient(clientId)
-		.secret(passwordEncoder.encode(clientSecret))
+		.secret(passwordEncoder.encode(clientSecret)) /*Senha da Aplicação*/
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
 		.accessTokenValiditySeconds(tokenDuration);
@@ -68,9 +69,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		chain.setTokenEnhancers(Arrays.asList(accessTokenConverter, enhancer));
 		
 		endpoints.authenticationManager(authenticationManager)
-		.tokenStore(tokenStore)
-		.accessTokenConverter(accessTokenConverter)
-		.tokenEnhancer(chain);
+		.tokenStore(tokenStore)                          /**/
+		.accessTokenConverter(accessTokenConverter)			/*Esses objetos irão processar o token*/
+		.tokenEnhancer(chain);							/**/
 	}
 	
 	

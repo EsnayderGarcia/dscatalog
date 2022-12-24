@@ -19,6 +19,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService detailsService;
 	
+	private static final String[] SWAGGER = {
+	        "/swagger-resources/**",
+	        "/swagger-ui/**",
+	        "/v2/api-docs"
+	};
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(detailsService).passwordEncoder(new BCryptPasswordEncoder());
@@ -31,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/actuator/**");
+		web.ignoring().antMatchers("/actuator/**").antMatchers(SWAGGER);
 	}
 
 	@Override
@@ -39,7 +45,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-	
-	
 	
 }
