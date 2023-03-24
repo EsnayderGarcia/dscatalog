@@ -7,8 +7,6 @@ import com.snayder.dscatalog.entities.Role;
 
 public class RoleDTO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	//@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 	

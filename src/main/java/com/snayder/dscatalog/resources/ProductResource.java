@@ -38,12 +38,16 @@ public class ProductResource {
     @GetMapping
     @ApiOperation("Busca paginada dos produtos")
     public ResponseEntity<Page<ProductDTO>> findAll(
+            @RequestParam(defaultValue = "") @ApiParam(value = "Nome do Produto") String name,
+            @RequestParam(defaultValue = "0") @ApiParam(value = "Id da Categoria") long categoryId,
+            @RequestParam(defaultValue = "0.0") @ApiParam(value = "Preço Mínimo do Produto") double minPrice,
+            @RequestParam(defaultValue = "0.0") @ApiParam(value = "Preço Máximo do Produto") double maxPrice,
             @RequestParam(defaultValue = "0") @ApiParam(value = "Número da Página") int page,
             @RequestParam(defaultValue = "10") @ApiParam(value = "Produtos por Página") int size,
             @RequestParam(defaultValue = "ASC") @ApiParam(value = "Tipo da Ordenação") String direction,
             @RequestParam(defaultValue = "name") @ApiParam(value = "Informe por qual dado os produtos serão ordenados") String sort) {
         Pageable pageable = PageRequest.of(page, size, valueOf(direction.toUpperCase()), sort);
-        Page<ProductDTO> products = this.productService.findAllPaged(pageable);
+        Page<ProductDTO> products = this.productService.findAllPaged(name, categoryId, minPrice, maxPrice, pageable);
 
         return ResponseEntity.ok(products);
     }

@@ -2,6 +2,7 @@ package com.snayder.dscatalog.services;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.snayder.dscatalog.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,19 +19,32 @@ import com.snayder.dscatalog.repositories.ProductRepository;
 import com.snayder.dscatalog.services.exceptions.DataBaseException;
 import com.snayder.dscatalog.services.exceptions.ResourceNotFoundException;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /*Essa anotação vai registrar esta classe como um componente*/ 
 /*que vai participar do sistema de injeção de dependência do spring*/
 @Service
 public class ProductService {
-	
+
 	@Autowired
 	ProductRepository productRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+	public Page<ProductDTO> findAllPaged(String name, Long categoryId, double minPrice, double maxPrice, Pageable pageable) {
+		List<Category> categories = categoryId == 0 ? null : Arrays.asList(categoryRepository.getOne(categoryId));
+
 		/*O Pageable já é um Stream*/
-		Page<Product> products = this.productRepository.findAll(pageable);
-		return products.map(c -> new ProductDTO(c, c.getCategories()));
+		Page<Product> products = this.productRepository.find(name.trim(), categories, minPrice, maxPrice, pageable);
+
+		productRepository.findProductsAndCategories(products.stream().collect(Collectors.toSet()));
+		return products.map(p -> new ProductDTO(p, p.getCategories()));
 	}
 	
 	@Transactional(readOnly = true)

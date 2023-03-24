@@ -41,7 +41,7 @@ public class ProductDTO implements Serializable {
 	
 	@NotEmpty(message = "As categorias do produto devem ser informadas")
 	@NotNull(message = "As categorias do produto devem ser informadas")
-	private List<CategoryDTO> categories = new ArrayList<>();
+	private final List<CategoryDTO> categories = new ArrayList<>();
 	
 	public ProductDTO() {}
 
